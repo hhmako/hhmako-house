@@ -1,0 +1,12 @@
+{
+  "name": "Codex PingFang Bridge",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma"],
+  "networkAccess": {
+    "allowedDomains": ["http://localhost:3957"],
+    "devAllowedDomains": ["http://localhost:3957"],
+    "reasoning": "Connects to the local Codex PingFang bridge running on the designer's machine so generated Figma text can be rendered with local PingFang SC fonts."
+  }
+}

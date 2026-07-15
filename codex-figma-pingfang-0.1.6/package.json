@@ -1,0 +1,23 @@
+{
+  "name": "codex-figma-pingfang",
+  "version": "0.1.6",
+  "private": true,
+  "description": "Local Codex-to-Figma bridge that renders Figma designs with PingFang SC from Figma Desktop.",
+  "type": "module",
+  "scripts": {
+    "bootstrap": "npm run setup && npm run ensure",
+    "build-open-plugin": "mkdir -p .bin .swift-module-cache && SWIFT_MODULE_CACHE_PATH=\"$PWD/.swift-module-cache\" swiftc scripts/open-figma-plugin.swift -o .bin/open-figma-plugin",
+    "dev": "node server/mcp-server.js",
+    "doctor": "node scripts/doctor.js",
+    "ensure": "bash scripts/ensure.sh",
+    "install-codex-config": "node scripts/install-codex-config.js",
+    "launch": "bash scripts/launch.sh",
+    "open-plugin": "osascript -l AppleScript scripts/open-figma-plugin.applescript",
+    "pack:zip": "npm run doctor && bash scripts/pack-release.sh",
+    "setup": "npm run install-codex-config",
+    "start": "node server/mcp-server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
