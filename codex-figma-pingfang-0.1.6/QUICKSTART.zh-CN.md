@@ -2,13 +2,13 @@
 
 这个包用于让设计师通过 Codex 生成 Figma 设计稿时，文本默认使用本机 `PingFang SC`。
 
-当前稳定版：`0.1.5`。
+当前稳定版：`0.1.6`。
 
-这一版的启动判断不是只看端口是否打开，而是会让 Figma 插件执行一次真实的 PingFang 字体探针。只有探针成功，`npm run ensure` 才会返回 ready。
+这一版的启动判断不是只看端口是否打开，而是会让 Figma 插件执行真实的 PingFang 字体探针，并确认插件支持当前页调试和已有文本节点替换。只有这些检查都成功，`npm run ensure` 才会返回 ready。
 
 ## 推荐交付方式
 
-把整个 `codex-figma-pingfang-0.1.5.zip` 发给同事，让同事把这个包交给 Codex 处理。用户不需要理解 npm、MCP、端口、probe。
+把整个 `codex-figma-pingfang-0.1.6.zip` 发给同事，让同事把这个包交给 Codex 处理。用户不需要理解 npm、MCP、端口、probe。
 
 同事只需要对 Codex 说：
 
@@ -114,6 +114,10 @@ Keep this terminal open while generating Figma designs. Press Ctrl+C to stop.
 ```bash
 curl http://localhost:3957/health
 curl http://localhost:3957/probe
+curl http://localhost:3957/debug-current-page
+curl -X POST http://localhost:3957/replace-text \
+  -H 'Content-Type: application/json' \
+  -d '{"replacements":[]}'
 ```
 
 `/health` 正常返回类似：
@@ -122,7 +126,14 @@ curl http://localhost:3957/probe
 {"ok":true,"pendingJobs":0,"waitingCalls":0,"fontFamily":"PingFang SC"}
 ```
 
-`/probe` 返回 `ok:true` 才表示 Figma 插件已经连上，并且本机 `PingFang SC` 可以被 Figma Desktop 加载。
+必须同时满足：
+
+- `/probe` 返回 `ok:true`。
+- `/probe` 里的 `missingPluginCapabilities` 为空。
+- `/debug-current-page` 返回 `ok:true`。
+- `/replace-text` 即使传空 replacements 也能成功返回，不能超时。
+
+这些都通过，才表示 Figma 插件已经连上、插件代码版本正确，并且本机 `PingFang SC` 可以被 Figma Desktop 加载。
 
 如果生成成功，Codex 通常会返回：
 
@@ -141,6 +152,6 @@ Rendered 6 nodes with PingFang SC.
 
 ## 给同事的最短步骤
 
-1. 把 `codex-figma-pingfang-0.1.5.zip` 发给 Codex。
+1. 把 `codex-figma-pingfang-0.1.6.zip` 发给 Codex。
 2. 按 Codex 提示在 Figma Desktop 里导入 `figma-plugin/manifest.json`。
 3. 后续只给 Codex Figma 链接和设计需求。

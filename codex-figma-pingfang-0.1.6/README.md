@@ -241,5 +241,5 @@ npm run pack:zip
 The zip is written next to this folder, for example:
 
 ```txt
-../codex-figma-pingfang-0.1.5.zip
+../codex-figma-pingfang-0.1.6.zip
 ```
