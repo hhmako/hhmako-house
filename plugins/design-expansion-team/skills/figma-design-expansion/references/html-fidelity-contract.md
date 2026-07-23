@@ -10,6 +10,34 @@ Build from:
 
 Do not treat a screenshot as the implementation source. Use screenshots only for visual comparison. If the exact frame, layer context, or source assets are unavailable, state the limitation instead of inventing a visually similar substitute.
 
+## Required review-result shell
+
+For multi-state page expansion, the final HTML artifact must use one consistent review page rather than a loose collection of screenshots or isolated modules.
+
+The required desktop structure is:
+
+`dark review canvas -> left task/state panel + right active-state complete-page preview`
+
+The left panel must contain:
+
+- a concise scene/module eyebrow;
+- the result title `完整页面状态拓展`, or an equally specific title when the artifact is not a page-state expansion;
+- one short sentence stating the baseline reuse and exact mutation scope;
+- one selectable card per generated state, showing the business-state name and its concise visible-result summary;
+- a clearly selected state using the same white-card treatment as the reference result page, while unselected states remain dark and subordinate.
+
+The right panel must contain:
+
+- the active business-state name above the preview;
+- the complete source-viewport page for that state, including unchanged page shell and fixed modules;
+- the original page aspect ratio, scrolling/fixed-layer behavior, real assets, and source component hierarchy.
+
+State selection must switch the complete-page preview inside the same review shell. Do not open disconnected pages, replace the preview with explanatory text, or show only the changed card/module when the requested review unit is a complete page.
+
+Keep review annotations outside the product page DOM. Do not place state names, task descriptions, debug badges, technical logs, or implementation notes inside the reconstructed mobile page. Decorative overlays from the host application are not part of the artifact and must not be reproduced.
+
+This shell is a presentation contract, not a fidelity shortcut. Every state shown in the selector must still pass the full asset, structural, visual, and computed-style acceptance rules below. If the user explicitly requests a different result-page format, follow that request while retaining complete-page previews and the same validation standard.
+
 ## Required sequence
 
 1. Read the complete source frame, not only the changing module.

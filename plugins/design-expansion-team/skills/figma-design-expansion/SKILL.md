@@ -212,6 +212,8 @@ Validate both structure and rendered output. A successful tool response is not p
 
 When the deliverable includes HTML or a browser-preview artifact, read [references/html-fidelity-contract.md](references/html-fidelity-contract.md) completely before implementation. Treat HTML as a renderer over the same page specification and state mapping used for Figma, not as screenshot tracing.
 
+The HTML deliverable must use the required review-result shell defined in that contract: a dark two-column review canvas with task/state navigation on the left and the active state label plus complete-page preview on the right. This shell is mandatory for multi-state page expansion unless the user explicitly requests another presentation format. It must never be used to hide an incomplete page or replace the source page structure.
+
 Do not claim high fidelity until every requested state has passed both same-viewport screenshot comparison and structural validation. Missing source assets, incomplete layer context, or unverified coordinate systems are blockers or explicit fidelity limitations, not permission to invent approximations.
 
 ## Default Interaction Flow

@@ -1,6 +1,6 @@
 {
   "name": "design-expansion-team",
-  "version": "0.1.0+codex.20260723090325",
+  "version": "0.1.0+codex.20260723113203",
   "description": "Shared team package for the Figma Design Expansion skill, including PRD mapping, token-preserving Figma expansion, canvas orchestration, and high-fidelity HTML validation.",
   "author": {
     "name": "Design Team"
