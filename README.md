@@ -29,10 +29,24 @@
 
 安装或更新后，请新建 Codex 任务以加载最新 Skill。
 
-维护者若先在 `~/.codex/skills/figma-design-expansion` 中完成优化，可执行：
+### 一起维护 Skill
+
+每个人都先在自己的 Codex 中修改并测试 Skill。确认可用后运行：
+
+```bash
+./publish-design-expansion-update.sh
+```
+
+它会自动创建个人分支并提交草稿 PR，不会直接覆盖团队正式版。审核合并后，其他同事运行：
+
+```bash
+./update-design-expansion-plugin.sh
+```
+
+即可获取最新正式版。
+
+如只想把本机 Skill 同步到仓库中检查，但暂时不发布，可执行：
 
 ```bash
 ./sync-design-expansion-from-local.sh
 ```
-
-检查并提交变更后，同事运行更新脚本即可同步。
