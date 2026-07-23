@@ -1,0 +1,3 @@
+display_name: Figma PRD State Expander
+short_description: Expand Figma state pages from PRDs or Feishu sheets.
+default_prompt: "Use this skill to map PRD or sheet states to existing Figma frames, clone baseline designs, update state-specific content, and validate each state against the source."
