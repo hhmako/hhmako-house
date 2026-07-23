@@ -1,64 +1,69 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CTR 预测测试</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>上门维修详情 · 完整页面状态拓展</title>
   <style>
-    * { box-sizing: border-box; }
-    :root { color-scheme: light; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif; }
-    body { margin: 0; background: #f5f5f7; color: #1d1d1f; overflow: hidden; }
-    .test-bar { height: 72px; display: flex; align-items: center; gap: 18px; padding: 0 22px; background: rgba(255,255,255,.92); border-bottom: 1px solid rgba(0,0,0,.08); backdrop-filter: saturate(180%) blur(20px); }
-    .test-title { flex: 0 0 auto; }
-    .test-title strong { display: block; font-size: 15px; letter-spacing: -.01em; }
-    .test-title span { display: block; margin-top: 3px; font-size: 11px; color: #86868b; }
-    .tabs { min-width: 0; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
-    .tabs::-webkit-scrollbar { display: none; }
-    .case-tab { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border: 0; border-radius: 12px; background: transparent; color: #6e6e73; cursor: pointer; font: inherit; transition: background .18s ease, color .18s ease; }
-    .case-tab:hover { background: #f2f2f4; color: #1d1d1f; }
-    .case-tab.active { background: #1d1d1f; color: #fff; }
-    .case-tab span { font-size: 13px; font-weight: 600; white-space: nowrap; }
-    .case-tab small { font-size: 10px; color: inherit; opacity: .64; white-space: nowrap; }
-    .result-frame { display: block; width: 100%; height: calc(100vh - 72px); border: 0; background: #fff; }
-    @media (max-width: 720px) {
-      .test-bar { height: 64px; padding: 0 12px; gap: 10px; }
-      .test-title span { display: none; }
-      .result-frame { height: calc(100vh - 64px); }
-      .case-tab { height: 38px; padding: 0 12px; }
-    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:"PingFang SC","Noto Sans SC",sans-serif;background:#151515;color:#fff}
+    button{font:inherit}
+    .shell{display:grid;grid-template-columns:360px 375px;gap:64px;align-items:start;width:max-content;margin:0 auto;padding:48px 24px 80px}
+    .panel{position:sticky;top:48px;padding-top:8px}
+    .eyebrow{margin-bottom:12px;color:#8a8b91;font-size:14px;line-height:20px}
+    h1{margin:0 0 12px;font-size:28px;line-height:35px;font-weight:600}
+    .intro{margin:0 0 28px;color:#8a8b91;font-size:15px;line-height:25px}
+    .flow{margin:18px 0 8px;color:#5c5d65;font-size:12px;line-height:17px}
+    .flow:first-of-type{margin-top:0}
+    .states{display:flex;flex-direction:column;gap:10px}
+    .state{width:100%;padding:14px 16px;border:1px solid #3c3c3c;border-radius:12px;background:#242424;color:#fff;text-align:left;cursor:pointer}
+    .state strong{display:block;font-size:15px;line-height:22px;font-weight:500}
+    .state span{display:block;margin-top:3px;color:#8a8b91;font-size:12px;line-height:17px}
+    .state.active{border-color:#fff;background:#fff;color:#161823}
+    .stage h2{margin:0 0 16px;font-size:24px;line-height:34px;font-weight:600}
+    .phone{position:relative;width:375px;height:811px;overflow:hidden;background:#f5f6f9}
+    iframe{display:block;width:375px;height:811px;border:0;background:#f5f6f9}
+    @media(max-width:820px){body{background:#fff}.shell{display:block;width:375px;margin:0;padding:0}.panel,.stage h2{display:none}}
   </style>
 </head>
 <body>
-  <header class="test-bar">
-    <div class="test-title"><strong>CTR 预测测试</strong><span>3 个案例</span></div>
-    <nav class="tabs" aria-label="预测案例">
-    <button class="case-tab active" type="button" data-case-id="89b41054a471" data-src="prediction_cases/89b41054a471.html" aria-selected="true">
-      <span>国补入口点击</span>
-      <small>UV CTR</small>
-    </button>
-    <button class="case-tab" type="button" data-case-id="review-tag-pv" data-src="review_tag_predicted_result.html" aria-selected="false">
-      <span>评价标签点击</span>
-      <small>PV CTR</small>
-    </button>
-    <button class="case-tab" type="button" data-case-id="review-body-pv" data-src="review_body_predicted_result.html" aria-selected="false">
-      <span>买家正文点击</span>
-      <small>PV CTR</small>
-    </button></nav>
-  </header>
-  <iframe class="result-frame" id="result-frame" title="预测结果" src="prediction_cases/89b41054a471.html"></iframe>
+  <main class="shell">
+    <aside class="panel">
+      <div class="eyebrow">维修服务 · 上门维修详情</div>
+      <h1>完整页面状态拓展</h1>
+      <p class="intro">完整复用 Figma 上门维修详情母版，依据 PRD 主流程 1、2 替换状态头部、业务卡片和底部操作。</p>
+      <div class="flow">主流程 1 · 售后一审</div>
+      <div class="states" id="flow1"></div>
+      <div class="flow">主流程 2 · 售后二审</div>
+      <div class="states" id="flow2"></div>
+    </aside>
+    <section class="stage">
+      <h2 id="title"></h2>
+      <div class="phone"><iframe id="preview" title="上门维修详情状态预览"></iframe></div>
+    </section>
+  </main>
   <script>
-    const frame = document.getElementById('result-frame');
-    const tabs = [...document.querySelectorAll('.case-tab')];
-    function activate(tab, updateHash = true) {
-      if (!tab) return;
-      tabs.forEach(item => { item.classList.toggle('active', item === tab); item.setAttribute('aria-selected', item === tab ? 'true' : 'false'); });
-      frame.src = tab.dataset.src;
-      if (updateHash) history.replaceState(null, '', '#' + tab.dataset.caseId);
-      tab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    const states=[
+      {id:0,flow:1,label:'等待商家一审',note:'等待商家处理'},
+      {id:1,flow:1,label:'一审拒绝',note:'商家已拒绝维修'},
+      {id:2,flow:1,label:'一审同意，未派工',note:'等待分配维修人员'},
+      {id:3,flow:1,label:'一审同意，已派工',note:'等待上门维修'},
+      {id:4,flow:2,label:'商家反馈维修完成',note:'维修完成'},
+      {id:5,flow:2,label:'商家反馈无法维修',note:'维修失败'},
+      {id:6,flow:2,label:'超时未回传维修结果',note:'售后关闭'}
+    ];
+    const params=new URLSearchParams(location.search);
+    let current=Math.max(0,Math.min(6,Number(params.get('state')||0)));
+    const title=document.querySelector('#title'),preview=document.querySelector('#preview');
+    function render(){
+      for(const flow of [1,2]) document.querySelector(`#flow${flow}`).innerHTML=states.filter(x=>x.flow===flow).map(x=>`<button class="state ${x.id===current?'active':''}" data-state="${x.id}"><strong>${x.label}</strong><span>${x.note}</span></button>`).join('');
+      const state=states[current];
+      title.textContent=state.label;
+      preview.src=`./strict.html?state=${current}`;
+      document.title=`${state.label} · 上门维修详情状态拓展`;
     }
-    tabs.forEach(tab => tab.addEventListener('click', () => activate(tab)));
-    const requested = location.hash.slice(1);
-    if (requested) activate(tabs.find(tab => tab.dataset.caseId === requested), false);
+    document.addEventListener('click',event=>{const button=event.target.closest('[data-state]');if(!button)return;current=Number(button.dataset.state);history.replaceState(null,'',`?state=${current}`);render()});
+    render();
   </script>
 </body>
 </html>
