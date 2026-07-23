@@ -36,6 +36,24 @@ Separate confirmed facts from guesses:
 
 Do not invent layout, modules, button groups, variants, or progress structures when the design file does not support them. If the business mapping asks for a capability that is missing in the design, report the gap and ask for a design baseline or confirmation.
 
+## Stability Protocol (Non-Bypassable)
+
+For any task that combines a Figma source, a PRD/business source, and multi-state page or HTML generation, use `explicit_confirmation`; the normal `direct` path is not allowed. This rule overrides later guidance that permits automatic continuation.
+
+Before any preflight, asset export, HTML/CSS creation, cloning, or write action:
+
+1. Inspect the Figma and PRD read-only.
+2. Send one concise understanding contract containing: `business goal | exact Figma target | review unit | baseline | complete state list | changing fields | fixed modules | output shell/placement | conflicts/missing evidence`.
+3. Wait for the user to confirm or correct that contract.
+4. Build the asset ledger and state-field ledger described in [references/stability-quality-gates.md](references/stability-quality-gates.md).
+5. Run `scripts/validate_acceptance.py preflight <manifest.json>`. Any failure is a hard stop.
+
+For four or more complete-page states, implement and validate one representative baseline state first. Do not expand the remaining states until that baseline passes source-viewport and critical-region comparison.
+
+Before reporting completion, run `scripts/validate_acceptance.py final <manifest.json>`. Do not use success language unless it exits successfully. A page that loads, switches state, or passes DOM checks is not visually accepted.
+
+Never use screenshots or screenshot crops as implementation assets. When the user asks to "切图", export the complete Figma node or original asset at the requested scale; a crop from a reference screenshot is comparison evidence only.
+
 ## Universal PRD-to-Design Contract
 
 For any PRD-driven expansion, enforce this order:
@@ -162,6 +180,8 @@ Direct generation is allowed when all of these are true:
 - Required button/action combinations already exist or can be produced by supported variants.
 - No current authoritative sources conflict.
 - No new information architecture, interaction pattern, or unsupported component is required.
+
+Exception: Figma + PRD + multi-state page/HTML tasks always require the Stability Protocol's explicit confirmation, even if every mapping appears unambiguous.
 
 Use three confidence outcomes:
 
