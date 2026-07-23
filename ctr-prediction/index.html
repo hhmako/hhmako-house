@@ -59,7 +59,7 @@
       for(const flow of [1,2]) document.querySelector(`#flow${flow}`).innerHTML=states.filter(x=>x.flow===flow).map(x=>`<button class="state ${x.id===current?'active':''}" data-state="${x.id}"><strong>${x.label}</strong><span>${x.note}</span></button>`).join('');
       const state=states[current];
       title.textContent=state.label;
-      preview.src=`./strict.html?state=${current}`;
+      preview.src=`./strict.html?state=${current}&release=dcfe607`;
       document.title=`${state.label} · 上门维修详情状态拓展`;
     }
     document.addEventListener('click',event=>{const button=event.target.closest('[data-state]');if(!button)return;current=Number(button.dataset.state);history.replaceState(null,'',`?state=${current}`);render()});
