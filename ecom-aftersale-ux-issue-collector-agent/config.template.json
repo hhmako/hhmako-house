@@ -1,0 +1,66 @@
+{
+  "baseToken": "<BASE_TOKEN>",
+  "tables": {
+    "rules": "<问题识别规则表 table id>",
+    "issues": "<走查问题收集 table id>"
+  },
+  "views": {
+    "issues": "<可选：走查问题收集 view id>"
+  },
+  "profilesDir": ".agent-profiles",
+  "maxQueriesPerChannel": 3,
+  "maxResultsPerQuery": 5,
+  "scene": {
+    "name": "交易售后体验问题",
+    "syncTitle": "问题反馈列表",
+    "platformKeyword": "抖音商城",
+    "platformTerms": ["抖音商城", "抖音电商", "抖音商城App"],
+    "scopeTerms": ["订单", "物流", "售后", "退款", "客服", "权益", "优惠券", "运费险"],
+    "pages": ["订单", "物流", "售后&权益", "客服", "行业"]
+  },
+  "fields": {
+    "title": "问题描述",
+    "problem": "原始吐槽摘要",
+    "priority": "优先级",
+    "owners": "负责人",
+    "images": "截图（问题+原帖）",
+    "source": "来源",
+    "sourceUrl": "链接",
+    "page": "场景",
+    "category": "问题分类",
+    "progress": "当前进度",
+    "date": "日期"
+  },
+  "statusValues": {
+    "new": ["待确认"],
+    "collected": ["已收录待跟进"],
+    "transferred": ["已转业务跟进"],
+    "processing": ["跟进中"],
+    "resolved": ["已解决"],
+    "rejected": ["不采纳"]
+  },
+  "cardTemplate": {
+    "templateId": "<已发布飞书卡片模板 ID>",
+    "issueBaseUrl": "<问题收集表 URL>",
+    "maxNewIssues": 5,
+    "maxResolvedIssues": 5
+  },
+  "progressBot": {
+    "webhookUrl": "<可选：群机器人 webhook，推荐通过环境变量 LARK_BOT_WEBHOOK 传入>",
+    "chatId": "<可选：通过 lark-cli bot 发送时使用的 chat_id>"
+  },
+  "channels": {
+    "xiaohongshu": {
+      "label": "小红书",
+      "searchUrl": "https://www.xiaohongshu.com/search_result?keyword={query}"
+    },
+    "weibo": {
+      "label": "微博",
+      "searchUrl": "https://s.weibo.com/weibo?q={query}"
+    },
+    "bilibili": {
+      "label": "哔哩哔哩",
+      "searchUrl": "https://search.bilibili.com/all?keyword={query}"
+    }
+  }
+}

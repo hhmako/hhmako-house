@@ -1,0 +1,29 @@
+{
+  "name": "售后专家自动发送工作流（暂停示例）",
+  "enabled_by_default": false,
+  "trigger": {
+    "type": "button_field",
+    "description": "历史方案：点击问题表中的一键发送按钮。当前默认暂停并隐藏，优先使用复制 & 打开话题群链接/辅助入口。"
+  },
+  "conditions": [
+    {
+      "field": "场景",
+      "operator": "in",
+      "value": ["售后&权益", "售后", "权益"]
+    }
+  ],
+  "action": {
+    "type": "send_lark_message",
+    "sender": "<自动化机器人或走查问题监控bot>",
+    "target_chat": "<thread_isolation 测试群 chat_id>",
+    "content": "<at user_id=\"<售后专家 user_id>\">售后专家</at> 根据标题和相关截图开始工作\n\n问题描述：\n${问题描述}",
+    "attachments": ["${截图（问题+原帖）}"]
+  },
+  "notes": [
+    "不要把真实 chat_id、user_id、webhook 写入共享包。",
+    "该模板仅作为历史/备用方案示例，不作为默认启用工作流。",
+    "普通 @售后专家 文本不会真正 at，需要使用飞书 at 标签。",
+    "飞书自动化通常不能把发送主体动态切换成按钮触发人；如需显示触发人，请在正文或日志中记录。",
+    "消息内容只包含 at、问题描述和截图，不附加优先级、分类、负责人、来源链接。"
+  ]
+}

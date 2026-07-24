@@ -1,0 +1,33 @@
+.DS_Store
+node_modules/
+
+# Local credentials and runtime config
+.env
+.env.*
+config.local.json
+*.local.json
+
+# Browser login state. Never commit cookies or social-account profiles.
+.agent-profiles/
+profiles/
+
+# Runtime outputs, audits, payloads, screenshots, downloaded source media.
+tmp/
+logs/
+lark-im-resources/
+downloads/
+screenshots/
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.mp4
+*.mov
+
+# Generated Feishu/Lark payloads can contain real Base links, chat ids, image keys.
+raw-records.json
+selected-records.json
+final-*.json
+*-payload.json
+*-send-result.json
