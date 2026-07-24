@@ -1,0 +1,20 @@
+{
+  "name": "design-expansion-team",
+  "interface": {
+    "displayName": "设计方案拓展团队仓库"
+  },
+  "plugins": [
+    {
+      "name": "design-expansion-team",
+      "source": {
+        "source": "local",
+        "path": "./plugins/design-expansion-team"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "design-expansion-team",
+  "version": "0.1.0+codex.20260723113203",
+  "description": "Shared team package for the Figma Design Expansion skill, including PRD mapping, token-preserving Figma expansion, canvas orchestration, and high-fidelity HTML validation.",
+  "author": {
+    "name": "Design Team"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "\u8bbe\u8ba1\u65b9\u6848\u62d3\u5c55\u56e2\u961f\u5305",
+    "shortDescription": "\u7edf\u4e00\u5b89\u88c5\u548c\u66f4\u65b0 Figma \u8bbe\u8ba1\u65b9\u6848\u62d3\u5c55 Skill\u3002",
+    "longDescription": "\u4ec5\u5305\u542b figma-design-expansion\uff1a\u4ece\u73b0\u6709\u8bbe\u8ba1\u7a3f\u4e0e PRD \u7406\u89e3\u3001\u5185\u90e8\u5b57\u6bb5\u6620\u5c04\u3001\u7ec4\u4ef6\u4e0e Token \u4fdd\u7559\uff0c\u5230\u753b\u5e03\u7f16\u6392\u3001Figma \u8bfb\u56de\u6821\u9a8c\u53ca HTML \u9ad8\u8fd8\u539f\u5ea6\u7ea6\u675f\u3002",
+    "developerName": "Design Team",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "\u8bfb\u53d6\u73b0\u6709\u8bbe\u8ba1\u7a3f\u548c\u9700\u6c42\uff0c\u5148\u5b8c\u6210\u53ef\u68c0\u67e5\u7684\u7406\u89e3\u4e0e\u6620\u5c04\uff0c\u518d\u590d\u7528\u539f\u7ec4\u4ef6\u548c Token \u62d3\u5c55\u8bbe\u8ba1\u72b6\u6001\u5e76\u8bfb\u56de\u6821\u9a8c\u3002"
+  }
+}

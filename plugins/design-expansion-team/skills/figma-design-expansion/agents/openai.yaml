@@ -1,0 +1,7 @@
+interface:
+  display_name: "Figma Design Expansion"
+  short_description: "拓展现有 Figma 设计状态并保持组件、Token 与高还原度。"
+  default_prompt: "先理解现有设计稿和业务来源，建立字段映射，再复用原组件与 Token 拓展完整状态并读回校验。"
+
+policy:
+  allow_implicit_invocation: true
