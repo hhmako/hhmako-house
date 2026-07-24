@@ -1,0 +1,19 @@
+{
+  "name": "ecom-aftersale-ux-issue-collector-agent",
+  "displayName": "交易售后体验问题收集 Agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "交易售后体验问题收集 Agent：用于全网采集、体验设计问题识别、多维表格录入和飞书卡片同步。",
+  "scripts": {
+    "monitor": "node src/run-external-monitor.mjs --config config.local.json",
+    "card:dry-run": "node src/run-template-sync-card.mjs --config config.local.json --dry-run",
+    "card:send": "node src/run-template-sync-card.mjs --config config.local.json --send",
+    "login:xhs": "node src/social-login.mjs --channel xiaohongshu",
+    "login:weibo": "node src/social-login.mjs --channel weibo"
+  },
+  "dependencies": {
+    "playwright": "^1.45.0",
+    "sharp": "^0.33.0"
+  }
+}
