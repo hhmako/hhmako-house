@@ -1,6 +1,6 @@
 ---
 name: figma-design-expansion
-description: Use when a user wants to expand an existing Figma design into more business states, page variants, module variants, card states, copy variants, button variants, floor visibility combinations, or a high-fidelity HTML artifact derived from those states. The skill inspects Figma, extracts PRD/Lark/Feishu/sheet evidence into an internal field mapping, decides whether direct generation or compact confirmation is safe, then clones or updates existing nodes while preserving components, tokens, fonts, assets, hierarchy, and layout contracts.
+description: 基于已有 Figma 设计稿和 PRD 拓展完整页面、模块、卡片、文案及按钮状态，复用原组件、图层、字体、Token 和素材，并生成经过结构与视觉校验的 Figma 或高还原度 HTML。用于设计状态拓展、PRD 映射和多状态页面交付。
 ---
 
 # Figma Design Expansion
