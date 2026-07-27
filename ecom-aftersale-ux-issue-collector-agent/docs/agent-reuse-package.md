@@ -44,11 +44,25 @@
 
 ## 3. 复用流程
 
-1. 复制 `config.template.json` 为 `config.local.json`。
-2. 填入目标 Base、table、view、卡片模板、机器人配置。
-3. 把业务规则写入规则表。
-4. 使用 `--dry-run` 检查读取和卡片 payload。
-5. 确认没有敏感信息和 mock 数据后再发送。
+1. 运行 `npm install && npm run setup`。
+2. 按 `docs/CONFIGURATION.md` 替换目标 Base、字段、群、卡片模板和机器人配置。
+3. 按 `docs/FEISHU_APP_SETUP.md` 为自建应用订阅 `im.message.receive_v1`。
+4. 把机器人加入两个实时反馈群和人工录入群。
+5. 运行三个平台登录命令，保存本机授权登录态。
+6. 把业务规则和负责人写入规则表。
+7. 运行 `npm run doctor`、`npm run group:dry-run`、`npm run card:dry-run`。
+8. 运行 `npm run check`，确认没有敏感信息和 mock 数据。
+9. 启动 `npm run group:listen`，再配置双周采集与发送。
+
+群消息实时监听实现位于：
+
+- `src/run-group-listener.mjs`
+- `src/group-event.mjs`
+- `src/group-pipeline.mjs`
+- `src/lark-openapi.mjs`
+- `src/state-store.mjs`
+
+不要只复制 README 或规则表；以上代码和 `ops/` 必须一并交付。
 
 ## 4. 禁止提交
 

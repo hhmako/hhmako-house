@@ -8,8 +8,9 @@
 - 发送脚本只注入真实变量，不修改模板布局、列宽、颜色、间距、按钮样式。
 - 如果模板样式不对，需要在飞书卡片搭建器中修改对应组件样式，不要通过字符串伪造。
 - 不使用 mock、fallback、默认示例数据补齐卡片。
-- 双周合并卡片使用模板 `AAqW1erW8x1lu`。
-- 抖音商城问题反馈吐槽群、抖音商城 App 独立端问题反馈群、人工录入的实时问题使用单条卡片模板 `AAqWSrIOa5ECF`。
+- 双周合并卡片使用 `config.local.json` 中的 `cardTemplate.templateId`。同事需要复制或新建自己的循环模板，并替换该 ID。
+- 抖音商城问题反馈吐槽群、抖音商城 App 独立端问题反馈群、人工录入的实时问题使用 `cardTemplate.realtimeTemplateId`。同事需要复制或新建自己的单条模板，并替换该 ID。
+- 两套模板的完整变量、类型和组件绑定见 [CARD-TEMPLATE-CONTRACT.md](CARD-TEMPLATE-CONTRACT.md)。
 
 ## 2. 数据来源
 

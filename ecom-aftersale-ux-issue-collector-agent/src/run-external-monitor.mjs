@@ -4,14 +4,18 @@ import crypto from "node:crypto";
 import { createRequire } from "node:module";
 import { extractRecordId, firstSelect, listRecords, rowsAsObjects, updateRecords, uploadAttachment, upsertRecord } from "./lark-base.mjs";
 import { analyzeImageScene } from "./image-scene.mjs";
+import { loadConfig } from "./config.mjs";
 
 const require = createRequire(import.meta.url);
 const { chromium } = require("playwright");
 const sharp = require("sharp");
 
-const configPath = getArg("config") || "issue-agent/config.example.json";
-const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+const configPath = getArg("config") || "config.local.json";
+const config = loadConfig(configPath);
 const sceneConfig = config.scene || {};
+const fields = config.fields || {};
+const monitorStateFile = path.join(config.runtimeDir || "runtime", "external-monitor-state.json");
+const monitorState = readJson(monitorStateFile, { channels: {} });
 
 const channelRows = rowsAsObjects(listRecords(config.baseToken, config.tables.channelConfig));
 const pageRuleRows = rowsAsObjects(listRecords(config.baseToken, config.tables.pageRules || config.tables.issueRules));
@@ -25,12 +29,12 @@ const enabledChannels = channelRows.filter((row) => {
   if (ruleType && ruleType !== "渠道运行配置") return false;
   const channel = getChannelName(row);
   const enabled = row.fields["是否启用"] === true;
-  return enabled && ["小红书", "微博"].includes(channel);
+  return enabled && ["小红书", "微博", "哔哩哔哩"].includes(channel);
 });
 
 const existingKeys = new Set(issueRows.map((row) => {
-  const link = normalizeLink(row.fields["原始链接"] || row.fields["新增｜原始链接"]);
-  const issue = normalizeText(row.fields["问题"]);
+  const link = normalizeLink(row.fields[fields.sourceUrl || "链接"]);
+  const issue = normalizeText(row.fields[fields.title || "问题描述"]);
   return link || hash(issue);
 }).filter(Boolean));
 
@@ -50,7 +54,7 @@ const typePriorityRules = typePriorityRuleRows.map((row) => {
   return {
     ruleType: judgeType === "优先级" ? "优先级识别" : judgeType === "问题类型" ? "问题类型识别" : firstSelect(row.fields["规则类型"]),
     output: normalizeText(row.fields["输出结果"]),
-    channels: row.fields["来源渠道"] || ["小红书", "微博", "飞书群", "人工反馈群（替换为实际群名）", "人工填入"],
+    channels: row.fields["来源渠道"] || ["小红书", "微博", "哔哩哔哩", "飞书群", "人工填入"],
     keywords: splitWords(row.fields["关键词"] || row.fields["输出结果"]),
     problem: normalizeText(row.fields["识别口径"] || row.fields["判断口径"] || row.fields["要识别的问题"]),
     examples: normalizeText(row.fields["用户原话例子"] || row.fields["用户可能怎么说"]),
@@ -69,9 +73,12 @@ const summary = { scanned: 0, inserted: 0, skippedDuplicate: 0, failedChannels: 
 
 for (const channelRow of enabledChannels) {
   const label = getChannelName(channelRow);
-  const channelKey = label === "小红书" ? "xiaohongshu" : "weibo";
+  const channelKey = label === "小红书" ? "xiaohongshu" : label === "微博" ? "weibo" : "bilibili";
   const channelConfig = config.channels[channelKey];
   const profileDir = path.join(config.profilesDir, channelKey);
+  const channelStartedAt = Date.now();
+  const fallbackSince = channelStartedAt - Number(config.schedule?.lookbackDays || 14) * 86400000;
+  const collectSince = Number(monitorState.channels[channelKey]?.lastCompletedAt || fallbackSince);
 
   if (!fs.existsSync(profileDir)) {
     await markChannel(channelRow, "已失效", "未找到登录态，请先运行 social-login.mjs 刷新登录态");
@@ -105,7 +112,21 @@ for (const channelRow of enabledChannels) {
         break;
       }
 
-      const items = await extractVisibleItems(page, label, config.maxResultsPerQuery || 5);
+      const extractedItems = await extractVisibleItems(page, label, config.maxResultsPerQuery || 5);
+      const items = extractedItems
+        .map((item) => ({ ...item, date: parsePublishedDate(item.dateText, channelStartedAt) }))
+        .filter((item) => {
+          if (!item.date) {
+            summary.skippedMissingPublishedDate = (summary.skippedMissingPublishedDate || 0) + 1;
+            return false;
+          }
+          if (item.date < collectSince || item.date > channelStartedAt) {
+            summary.skippedOutsideWindow = (summary.skippedOutsideWindow || 0) + 1;
+            return false;
+          }
+          return true;
+        })
+        .sort((a, b) => a.date - b.date);
       for (const item of items) {
         summary.scanned += 1;
         const classified = classify(item, ruleSets, rule);
@@ -132,25 +153,31 @@ for (const channelRow of enabledChannels) {
 
         existingKeys.add(key);
         const createResult = await upsertRecord(config.baseToken, config.tables.issues, {
-          "问题": classified.issue,
-          "所属页面": classified.page,
-          "问题类型": classified.type,
-          "优先级": classified.priority,
-          "负责人": classified.owner,
-          "来源渠道": [label],
-          "原始链接": item.link,
-          "贡献人": item.author || "",
-          "状态": "待确认",
+          [fields.title || "问题描述"]: classified.issue,
+          [fields.problem || "原始吐槽摘要"]: smartSummary(item.text),
+          [fields.page || "场景"]: [classified.page],
+          [fields.category || "问题分类"]: classified.type,
+          [fields.priority || "优先级"]: classified.priority,
+          [fields.owners || "负责人"]: classified.owner,
+          [fields.source || "来源"]: label,
+          [fields.sourceUrl || "链接"]: item.link,
+          [fields.progress || "当前进度"]: "待确认",
+          [fields.date || "日期"]: item.date || Date.now(),
         });
         const recordId = extractRecordId(createResult);
         for (const file of imageCapture.files) {
           if (!recordId) break;
-          uploadAttachment(config.baseToken, config.tables.issues, recordId, "截图", file, path.basename(file));
+          uploadAttachment(config.baseToken, config.tables.issues, recordId, fields.imagesFieldId, file, path.basename(file));
         }
         summary.inserted += 1;
       }
     }
     await markChannel(channelRow, "正常", "");
+    monitorState.channels[channelKey] = {
+      lastCompletedAt: channelStartedAt,
+      lastCompletedAtIso: new Date(channelStartedAt).toISOString(),
+    };
+    writeJson(monitorStateFile, monitorState);
   } catch (error) {
     await markChannel(channelRow, "已失效", error.message.slice(0, 300));
     summary.failedChannels.push(label);
@@ -207,19 +234,16 @@ function matchRule(rules, text) {
 }
 
 function inferType(text) {
-  if (/点不了|打不开|失败|报错|异常|不显示|金额.*错|状态.*错|加载/.test(text)) return "实现 bug";
-  if (/缺少|没有|找不到.*入口|无.*入口|无操作区|无楼层|流程不完整/.test(text)) return "功能缺失";
-  if (/路径绕|入口深|流程断|流转|无反馈|跳转|修改|确认|返回/.test(text)) return "交互流程";
-  if (/不懂|不清楚|不知道|说明|文案|状态说明|金额说明|时效|多久到账|规则/.test(text)) return "信息表达";
-  if (/遮挡|大字|小屏|适配|挤|错位/.test(text)) return "适配问题";
-  if (/颜色|圆角|间距|对齐|样式|图标|icon|截断|贴边|压扁|还原|字号/.test(text)) return "UI样式";
-  return "信息表达";
+  if (/遮挡|裁切|截断|重叠|大字|小屏|适配|挤|错位|字号|对比度/.test(text)) return "界面显示与适配问题";
+  if (/点不了|打不开|无反馈|点击|输入|入口难找|找不到.*入口|返回|关闭|重试/.test(text)) return "操作交互与反馈问题";
+  if (/流程断|无法继续|无法完成|没有后续|缺少下一步|撤销|重新申请/.test(text)) return "任务流程与闭环问题";
+  return "信息表达与理解问题";
 }
 
 function inferPriority(text) {
   if (/提交不了|点不了|打不开|失败|金额.*错|状态.*错|无法|不能|接通不了|找不到.*入口/.test(text)) return "P0 体验阻断或问题严重";
   if (/不懂|不清楚|难找|太深|绕|误解|说明|不知道/.test(text)) return "P1 体验曲折或效果粗糙";
-  return "P2-UI bug";
+  return "P2 细节体验问题";
 }
 
 function shouldKeepCandidate(scene) {
@@ -329,17 +353,53 @@ async function extractVisibleItems(page, label, limit) {
   return page.evaluate(({ label, limit }) => {
     const links = Array.from(document.querySelectorAll("a[href]"));
     return links
-      .map((link) => ({
-        text: (link.innerText || link.textContent || "").trim(),
-        link: link.href,
-        author: "",
-      }))
+      .map((link) => {
+        const container = link.closest("article, li, [class*='card'], [class*='item'], [class*='feed']") || link;
+        const time = container.querySelector("time");
+        const dateNode = time
+          || container.querySelector("[datetime], [class*='time'], [class*='date'], [class*='publish']");
+        return {
+          text: (container.innerText || link.innerText || link.textContent || "").trim(),
+          link: link.href,
+          author: "",
+          dateText: time?.getAttribute("datetime")
+            || dateNode?.getAttribute?.("datetime")
+            || dateNode?.textContent
+            || "",
+        };
+      })
       .filter((item) => item.text.length >= 8)
       .filter((item) => label === "小红书"
         ? /xiaohongshu\.com/.test(item.link)
-        : /weibo\.com|m\.weibo\.cn/.test(item.link))
+        : label === "微博"
+          ? /weibo\.com|m\.weibo\.cn/.test(item.link)
+          : /bilibili\.com\/video|bilibili\.com\/opus|b23\.tv/.test(item.link))
       .slice(0, limit);
   }, { label, limit });
+}
+
+function parsePublishedDate(value, nowValue = Date.now()) {
+  const text = normalizeText(value);
+  if (!text) return 0;
+  const now = new Date(nowValue);
+  if (/刚刚/.test(text)) return nowValue;
+  const minutes = text.match(/(\d+)\s*分钟前/);
+  if (minutes) return nowValue - Number(minutes[1]) * 60000;
+  const hours = text.match(/(\d+)\s*小时前/);
+  if (hours) return nowValue - Number(hours[1]) * 3600000;
+  const days = text.match(/(\d+)\s*天前/);
+  if (days) return nowValue - Number(days[1]) * 86400000;
+  if (/昨天/.test(text)) return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1).getTime();
+  const full = text.match(/(20\d{2})[-/.年](\d{1,2})[-/.月](\d{1,2})/);
+  if (full) return new Date(Number(full[1]), Number(full[2]) - 1, Number(full[3])).getTime();
+  const short = text.match(/(\d{1,2})[-/.月](\d{1,2})/);
+  if (short) {
+    let date = new Date(now.getFullYear(), Number(short[1]) - 1, Number(short[2]));
+    if (date.getTime() > nowValue + 86400000) date = new Date(now.getFullYear() - 1, Number(short[1]) - 1, Number(short[2]));
+    return date.getTime();
+  }
+  const parsed = Date.parse(text);
+  return Number.isFinite(parsed) ? parsed : 0;
 }
 
 async function looksLoggedOut(page) {
@@ -375,6 +435,24 @@ function escapeRegExp(value) {
 
 function hash(value) {
   return crypto.createHash("sha256").update(String(value)).digest("hex");
+}
+
+function readJson(file, fallback) {
+  try {
+    return JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch {
+    return fallback;
+  }
+}
+
+function writeJson(file, value) {
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`);
+}
+
+function smartSummary(value) {
+  const text = normalizeText(value);
+  return text.length > 120 ? `${text.slice(0, 119)}…` : text;
 }
 
 function getArg(name) {

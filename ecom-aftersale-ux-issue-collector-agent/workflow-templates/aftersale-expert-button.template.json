@@ -15,7 +15,7 @@
   "action": {
     "type": "send_lark_message",
     "sender": "<自动化机器人或走查问题监控bot>",
-    "target_chat": "<thread_isolation 测试群 chat_id>",
+    "target_chat": "<替换：售后专家目标群 chat_id>",
     "content": "<at user_id=\"<售后专家 user_id>\">售后专家</at> 根据标题和相关截图开始工作\n\n问题描述：\n${问题描述}",
     "attachments": ["${截图（问题+原帖）}"]
   },

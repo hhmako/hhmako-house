@@ -1,18 +1,31 @@
 {
   "name": "ecom-aftersale-ux-issue-collector-agent",
   "displayName": "交易售后体验问题收集 Agent",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "交易售后体验问题收集 Agent：用于全网采集、体验设计问题识别、多维表格录入和飞书卡片同步。",
   "scripts": {
+    "setup": "node src/setup.mjs",
+    "doctor": "node src/doctor.mjs --config config.local.json",
+    "onboard": "npm run setup && npm run doctor",
     "monitor": "node src/run-external-monitor.mjs --config config.local.json",
+    "group:listen": "node src/run-group-listener.mjs --config config.local.json",
+    "group:dry-run": "node src/run-group-listener.mjs --config test/fixtures/config.test.json --fixture test/fixtures/group-event.json --dry-run",
+    "biweekly:collect": "node src/run-biweekly-cycle.mjs --config config.local.json --phase collect",
+    "biweekly:preview": "node src/run-biweekly-cycle.mjs --config config.local.json --phase send --dry-run",
+    "biweekly:send": "node src/run-biweekly-cycle.mjs --config config.local.json --phase send --send",
     "card:dry-run": "node src/run-template-sync-card.mjs --config config.local.json --dry-run",
     "card:send": "node src/run-template-sync-card.mjs --config config.local.json --send",
     "login:xhs": "node src/social-login.mjs --channel xiaohongshu",
-    "login:weibo": "node src/social-login.mjs --channel weibo"
+    "login:weibo": "node src/social-login.mjs --channel weibo",
+    "login:bilibili": "node src/social-login.mjs --channel bilibili",
+    "test": "node --test",
+    "check:syntax": "node src/check-syntax.mjs",
+    "check": "npm run check:syntax && npm test && node src/security-scan.mjs"
   },
   "dependencies": {
+    "@larksuiteoapi/node-sdk": "^1.71.1",
     "playwright": "^1.45.0",
     "sharp": "^0.33.0"
   }

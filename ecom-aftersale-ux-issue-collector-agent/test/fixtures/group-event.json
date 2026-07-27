@@ -1,0 +1,17 @@
+{
+  "header": { "event_id": "fixture-event-001" },
+  "event": {
+    "sender": {
+      "sender_id": { "open_id": "ou_fixture_user" },
+      "sender_type": "user"
+    },
+    "message": {
+      "message_id": "om_fixture_message",
+      "chat_id": "<替换：该群 chat_id>",
+      "chat_type": "group",
+      "message_type": "post",
+      "create_time": "1784800000000",
+      "content": "{\"zh_cn\":{\"title\":\"退款弹窗适配问题\",\"content\":[[{\"tag\":\"text\",\"text\":\"抖音商城退款弹窗底部确认按钮被小屏裁切，无法继续退款\"},{\"tag\":\"img\",\"image_key\":\"img_fixture_evidence\"}]]}}"
+    }
+  }
+}

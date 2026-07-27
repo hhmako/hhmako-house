@@ -10,6 +10,7 @@ config.local.json
 # Browser login state. Never commit cookies or social-account profiles.
 .agent-profiles/
 profiles/
+runtime/
 
 # Runtime outputs, audits, payloads, screenshots, downloaded source media.
 tmp/
@@ -31,3 +32,4 @@ selected-records.json
 final-*.json
 *-payload.json
 *-send-result.json
+config.report.json

@@ -12,8 +12,8 @@ const args = new Map(process.argv.slice(2).map((arg, index, all) => {
 }));
 
 const channel = args.get("channel");
-if (!channel || !["xiaohongshu", "weibo"].includes(channel)) {
-  throw new Error("Usage: social-login.mjs --channel xiaohongshu|weibo [--profiles-dir <path>]");
+if (!channel || !["xiaohongshu", "weibo", "bilibili"].includes(channel)) {
+  throw new Error("Usage: social-login.mjs --channel xiaohongshu|weibo|bilibili [--profiles-dir <path>]");
 }
 
 const profilesDir = args.get("profiles-dir") || path.resolve(".agent-profiles");
@@ -22,7 +22,9 @@ fs.mkdirSync(profileDir, { recursive: true });
 
 const startUrl = channel === "xiaohongshu"
   ? "https://www.xiaohongshu.com"
-  : "https://weibo.com";
+  : channel === "weibo"
+    ? "https://weibo.com"
+    : "https://www.bilibili.com";
 
 const context = await chromium.launchPersistentContext(profileDir, {
   executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",

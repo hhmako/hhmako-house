@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
+import { loadConfig } from "./config.mjs";
 
 const require = createRequire(import.meta.url);
 const sharp = require("sharp");
@@ -10,7 +11,7 @@ const sharp = require("sharp");
 const configPath = valueAfter("--config") || "config.local.json";
 const dryRun = process.argv.includes("--dry-run");
 const send = process.argv.includes("--send");
-const config = JSON.parse(readFileSync(configPath, "utf8"));
+const config = loadConfig(configPath);
 
 const fields = config.fields || {};
 const statusValues = config.statusValues || {};
