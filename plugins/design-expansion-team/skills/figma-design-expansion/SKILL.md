@@ -9,7 +9,7 @@ Use this skill for design expansion work based on existing Figma drafts.
 
 The goal is not to redraw screens. The goal is to understand the current design structure, map business variation internally, and update Figma by cloning or modifying the existing design with minimal visual drift. An external mapping table is optional, not a mandatory gate.
 
-PingFang/font tooling is a dependency, not the skill goal. When local PingFang writing is required, use the Codex PingFang Bridge preflight before writing to Figma.
+PingFang and Feishu tooling are dependencies, not the skill goal. This package bundles Codex PingFang Bridge and deterministic dependency bootstrap scripts. After requirement understanding, install missing required tooling automatically and ask the user only for authorization or one-time plugin import that Codex cannot perform. Read [references/dependency-bootstrap.md](references/dependency-bootstrap.md) completely before dependency setup.
 
 ## Core Principle
 
@@ -280,9 +280,10 @@ When the user sends a Figma link and asks to "拓展状态", "拓展设计稿", 
 4. Close Gate 0, then run preflight checks for the intended output.
    - Send the concise visible understanding first: target, baseline, state scope, variable fields, fixed modules, and output placement.
    - For `direct`, continue automatically after that message. For `compact_confirmation`, wait for the blocking answer before preflight.
-   - If the task will write a Lark/Feishu mapping table, check whether `lark-cli` is available and authenticated before promising a live Sheet.
-   - If the task will write to Figma with local PingFang text, check the Codex PingFang Bridge only after the correct target file/page and mutation scope are known.
-   - If a required tool is missing, report the exact missing tool and use the fallback path only with user awareness.
+   - If the next action reads or writes Lark/Feishu, run `scripts/ensure_lark_cli.sh`. Missing `lark-cli` must be installed automatically from the official package; only browser authorization may be delegated to the user.
+   - If the next action writes to Figma with local PingFang text, run the bundled `scripts/ensure_pingfang_bridge.sh` only after the correct target file/page and mutation scope are known.
+   - If the user explicitly asks to install the complete package, run `scripts/install_bundle_dependencies.sh`.
+   - Use a fallback only after a concrete installation/authentication failure and with user awareness. Dependency setup is never the task endpoint; resume the original operation afterward.
 
 5. Classify expansion granularity.
    - Single module copy
@@ -478,9 +479,10 @@ When writing Figma:
 - Execute fragile changes in bounded stages and return node IDs after each stage. On any failure, inspect current Figma state and resume only the unfinished stage; never blindly rerun the full workflow.
 - Use official Figma MCP tools for inspection and write actions.
 - Load the `figma-use` skill before every `use_figma` write/read script that executes in Figma.
-- If using local PingFang text writing, run the Codex PingFang Bridge preflight:
-  - `npm run setup`
-  - `FIGMA_URL="<figma link>" npm run ensure`
+- If using local PingFang text writing, bootstrap the bundled Codex PingFang Bridge and run its preflight:
+  - `scripts/ensure_pingfang_bridge.sh --setup-only`
+  - If needed, ask the user to import/open the printed `PINGFANG_PLUGIN_MANIFEST` once in Figma Desktop.
+  - `scripts/ensure_pingfang_bridge.sh --figma-url "<figma link>"`
   - Verify `/probe` has empty `missingPluginCapabilities`.
   - Verify `/debug-current-page` returns ok.
   - Verify `/replace-text` can return with empty replacements.
@@ -503,18 +505,18 @@ When writing Figma:
 
 When a mapping table is needed:
 
-- Use local `lark-cli` first for Feishu/Lark sheets.
+- Use local `lark-cli` first for Feishu/Lark documents and sheets.
 - Before creating or reading sheets, check:
-  - `command -v lark-cli` or the known local install path.
+  - Run `scripts/ensure_lark_cli.sh`; use the `LARK_CLI_BIN` path it prints.
   - `lark-cli` can access the current tenant/account.
   - The target link type is supported. If a wiki link resolves to a sheet, switch to the sheet export/read path.
 - If `lark-cli` is missing:
-  - Do not pretend a live Feishu Sheet was created.
-  - Tell the user that live Feishu sheet generation requires `lark-cli`.
-  - If installation instructions are known in the workspace, install or ask for permission to install.
-  - If installation is not available, generate a local `.xlsx` or Markdown/CSV mapping table as a fallback and clearly label it as a fallback.
+  - Install it automatically with `scripts/ensure_lark_cli.sh`; do not ask the user to install it manually when npm is available.
+  - The script installs the official `@larksuite/cli` package into `$HOME/.codex/tools/lark-cli` and does not modify shell startup files.
+  - If Node/npm is unavailable or installation fails after an allowed retry, report the exact blocker and offer a clearly labeled local `.xlsx` fallback.
 - If `lark-cli` exists but is not authenticated:
-  - Ask the user to complete the CLI login/auth step.
+  - Start the CLI login/auth flow, then ask the user only to complete browser authorization.
+  - Verify access after authorization and resume the original task.
   - Do not ask product owners to fill a local fallback unless the user accepts the fallback.
 - If `lark-cli` can read but cannot create/update:
   - Use it to read PRD/source sheets.

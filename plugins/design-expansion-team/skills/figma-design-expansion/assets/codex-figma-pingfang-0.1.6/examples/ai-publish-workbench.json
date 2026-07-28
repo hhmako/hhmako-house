@@ -1,0 +1,71 @@
+{
+  "clearPage": false,
+  "document": {
+    "type": "frame",
+    "name": "AI发品设计稿",
+    "x": 0,
+    "y": 0,
+    "width": 294,
+    "height": 101,
+    "fill": "#ffffff",
+    "layout": "horizontal",
+    "primaryAxisAlignItems": "CENTER",
+    "counterAxisAlignItems": "CENTER",
+    "gap": 16,
+    "children": [
+      {
+        "type": "frame",
+        "name": "Step badge",
+        "width": 51,
+        "height": 41,
+        "fill": "#e9eafe",
+        "stroke": "rgba(81, 88, 243, 0.5)",
+        "strokeWidth": 0.666,
+        "cornerRadius": 8,
+        "layout": "horizontal",
+        "primaryAxisAlignItems": "CENTER",
+        "counterAxisAlignItems": "CENTER",
+        "children": [
+          {
+            "type": "text",
+            "name": "Step number",
+            "text": "02",
+            "fontSize": 20,
+            "fontWeight": "semibold",
+            "fill": "#2830fd"
+          }
+        ]
+      },
+      {
+        "type": "frame",
+        "name": "Copy",
+        "width": 176,
+        "height": 49,
+        "layout": "vertical",
+        "primaryAxisAlignItems": "CENTER",
+        "counterAxisAlignItems": "MIN",
+        "gap": 2,
+        "children": [
+          {
+            "type": "text",
+            "name": "Title",
+            "text": "ai发品设计稿",
+            "fontSize": 20,
+            "fontWeight": "semibold",
+            "fill": "#000000",
+            "width": 176
+          },
+          {
+            "type": "text",
+            "name": "Subtitle",
+            "text": "会话辅助+草稿确认+局部优化",
+            "fontSize": 13,
+            "fontWeight": "regular",
+            "fill": "#afafaf",
+            "width": 176
+          }
+        ]
+      }
+    ]
+  }
+}
