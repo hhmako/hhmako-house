@@ -3,11 +3,15 @@
 本目录是完整 Agent，不是规则文档或卡片脚本合集。请保留整个
 `ecom-aftersale-ux-issue-collector-agent` 目录。
 
+开始前先完整阅读 [统一接入清单](START-HERE.md)。其中列出了同事必须自行替换的所有
+真实信息；仅拿到“问题识别规则表”不等于拿到了可入库的问题库。
+
 ## 1. 安装
 
 ```bash
 cd ecom-aftersale-ux-issue-collector-agent
 npm install
+npm run verify:package
 npm run setup
 ```
 
@@ -74,6 +78,7 @@ npm run login:bilibili
 
 ```bash
 npm run doctor
+npm run verify:access
 npm run group:dry-run
 npm run card:dry-run
 npm run check

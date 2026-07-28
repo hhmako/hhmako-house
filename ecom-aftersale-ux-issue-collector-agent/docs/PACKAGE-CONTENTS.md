@@ -35,6 +35,7 @@
 
 - `config.template.json`：所有可替换配置的占位模板。
 - `.env.example`：密钥环境变量模板。
+- `docs/START-HERE.md`：三群、五表、字段、卡片、发送目标和负责人的唯一接入清单。
 - `docs/after-sales-collection-rules.md`：完整收录规则。
 - `docs/card-sync-rules.md`：实时与双周卡片规则。
 - `docs/CONFIGURATION.md`：逐项替换说明。
@@ -50,6 +51,7 @@
 
 ```bash
 npm install
+npm run verify:package
 npm run group:dry-run
 npm run check
 ```

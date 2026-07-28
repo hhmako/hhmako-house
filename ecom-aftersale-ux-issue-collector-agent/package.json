@@ -8,6 +8,8 @@
   "scripts": {
     "setup": "node src/setup.mjs",
     "doctor": "node src/doctor.mjs --config config.local.json",
+    "verify:package": "node src/verify-package.mjs",
+    "verify:access": "node src/verify-config-access.mjs --config config.local.json",
     "onboard": "npm run setup && npm run doctor",
     "monitor": "node src/run-external-monitor.mjs --config config.local.json",
     "group:listen": "node src/run-group-listener.mjs --config config.local.json",
@@ -22,7 +24,7 @@
     "login:bilibili": "node src/social-login.mjs --channel bilibili",
     "test": "node --test",
     "check:syntax": "node src/check-syntax.mjs",
-    "check": "npm run check:syntax && npm test && node src/security-scan.mjs"
+    "check": "npm run verify:package && npm run check:syntax && npm test && node src/security-scan.mjs"
   },
   "dependencies": {
     "@larksuiteoapi/node-sdk": "^1.71.1",

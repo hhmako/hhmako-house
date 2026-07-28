@@ -15,8 +15,13 @@
 
 ## 同事首次使用
 
+先阅读 [从这里开始：完整接入清单](docs/START-HERE.md)。该文档集中列出飞书应用、三个实时
+群、完整问题库五张表、问题字段、两套卡片、发送目标和负责人映射；不要只拿规则表或只填
+一个模板 ID。
+
 ```bash
 npm install
+npm run verify:package
 npm run setup
 ```
 
