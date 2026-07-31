@@ -1,0 +1,4 @@
+# 将 /ABSOLUTE/PATH 替换为本机仓库绝对路径。
+# 脚本内部会根据 config.local.json 的 biweeklyAnchorDate 跳过非双周。
+0 11 * * 2 cd /ABSOLUTE/PATH/ecom-aftersale-ux-issue-collector-agent && /usr/bin/env npm run biweekly:collect >> runtime/biweekly-collect.log 2>&1
+30 15 * * 2 cd /ABSOLUTE/PATH/ecom-aftersale-ux-issue-collector-agent && /usr/bin/env npm run biweekly:send >> runtime/biweekly-send.log 2>&1

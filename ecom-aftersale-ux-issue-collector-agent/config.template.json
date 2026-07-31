@@ -1,0 +1,130 @@
+{
+  "baseToken": "<替换：问题库 Base Token>",
+  "tables": {
+    "rules": "<替换：规则表 table_id>",
+    "channelConfig": "<替换：渠道开关表 table_id>",
+    "pageRules": "<替换：页面与负责人映射表 table_id>",
+    "typePriorityRules": "<替换：类型与优先级规则表 table_id>",
+    "issues": "<替换：体验问题收集表 table_id>"
+  },
+  "views": {
+    "issues": "<可选：问题表 view_id>"
+  },
+  "profilesDir": ".agent-profiles",
+  "runtimeDir": "runtime",
+  "maxQueriesPerChannel": 3,
+  "maxResultsPerQuery": 5,
+  "scene": {
+    "name": "交易售后体验问题",
+    "syncTitle": "问题反馈列表",
+    "platformKeyword": "抖音商城",
+    "platformTerms": ["抖音商城", "抖音电商", "抖音商城App"],
+    "scopeTerms": ["订单", "物流", "售后", "退款", "客服", "权益", "优惠券", "运费险"],
+    "pages": ["订单", "物流", "售后&权益", "客服", "行业"],
+    "excludedTerms": ["生活服务", "本地生活", "商家态度", "客服态度", "快递延误", "商品质量"]
+  },
+  "fields": {
+    "title": "问题描述",
+    "problem": "原始吐槽摘要",
+    "priority": "优先级",
+    "owners": "负责人",
+    "images": "截图（问题+原帖）",
+    "imagesFieldId": "<替换：截图附件字段 field_id>",
+    "source": "来源",
+    "sourceUrl": "链接",
+    "page": "场景",
+    "category": "问题分类",
+    "progress": "当前进度",
+    "date": "日期",
+    "sourceMessageId": "",
+    "dedupeKey": ""
+  },
+  "statusValues": {
+    "new": ["待确认"],
+    "collected": ["已收录待跟进"],
+    "transferred": ["已转业务跟进"],
+    "processing": ["跟进中"],
+    "resolved": ["已解决"],
+    "rejected": ["不采纳"]
+  },
+  "cardTemplate": {
+    "templateId": "<替换：双周合并卡片模板 ID>",
+    "realtimeTemplateId": "<替换：实时单条卡片模板 ID>",
+    "issueBaseUrl": "<替换：问题收集表完整 URL>",
+    "maxNewIssues": 5,
+    "maxResolvedIssues": 5,
+    "realtimeVariables": {
+      "headerTitle": "header_title",
+      "titleLine": "title_line",
+      "problemLine": "problem_line",
+      "ownerLine": "owner_line",
+      "imageKey": "image_key",
+      "sourceUrl": "source_url",
+      "detailUrl": "detail_url",
+      "issueBaseUrl": "issue_base_url"
+    }
+  },
+  "progressBot": {
+    "webhookEnv": "LARK_BOT_WEBHOOK",
+    "chatId": "<可选：使用 lark-cli bot 发送时的目标 chat_id>"
+  },
+  "realtimeGroups": {
+    "enabled": true,
+    "mergeWindowMs": 6000,
+    "requireEvidence": true,
+    "sources": [
+      {
+        "label": "抖音商城问题反馈吐槽群",
+        "chatId": "<替换：该群 chat_id>",
+        "sourceValue": "抖音商城问题反馈吐槽群",
+        "mode": "feedback"
+      },
+      {
+        "label": "抖音商城 App（独立端）问题反馈群",
+        "chatId": "<替换：该群 chat_id>",
+        "sourceValue": "抖音商城 App（独立端）问题反馈群",
+        "mode": "feedback"
+      },
+      {
+        "label": "人工录入群",
+        "chatId": "<替换：人工录入目标群 chat_id>",
+        "sourceValue": "人工录入",
+        "mode": "mention",
+        "mentionNames": ["体验问题跟进小助手"]
+      }
+    ],
+    "analyzer": {
+      "mode": "builtin",
+      "commandEnv": "ISSUE_ANALYZER_COMMAND",
+      "timeoutMs": 20000
+    }
+  },
+  "ownerMappings": {
+    "订单": [],
+    "物流": [],
+    "售后&权益": [],
+    "客服": [],
+    "行业": []
+  },
+  "schedule": {
+    "timezone": "Asia/Shanghai",
+    "biweeklyAnchorDate": "2026-07-21",
+    "collectCron": "0 11 * * 2",
+    "sendCron": "30 15 * * 2",
+    "lookbackDays": 14
+  },
+  "channels": {
+    "xiaohongshu": {
+      "label": "小红书",
+      "searchUrl": "https://www.xiaohongshu.com/search_result?keyword={query}"
+    },
+    "weibo": {
+      "label": "微博",
+      "searchUrl": "https://s.weibo.com/weibo?q={query}"
+    },
+    "bilibili": {
+      "label": "哔哩哔哩",
+      "searchUrl": "https://search.bilibili.com/all?keyword={query}"
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "baseToken": "bas_fixture_token",
+  "tables": {
+    "issues": "tbl_fixture_issues"
+  },
+  "profilesDir": "../../.agent-profiles",
+  "runtimeDir": "../../runtime",
+  "scene": {
+    "platformTerms": ["抖音商城", "抖音电商", "抖音商城App"],
+    "scopeTerms": ["订单", "物流", "售后", "退款", "客服", "权益", "优惠券", "运费险"]
+  },
+  "fields": {
+    "title": "问题描述",
+    "problem": "原始吐槽摘要",
+    "priority": "优先级",
+    "owners": "负责人",
+    "images": "截图（问题+原帖）",
+    "imagesFieldId": "fld_fixture_images",
+    "source": "来源",
+    "sourceUrl": "链接",
+    "page": "场景",
+    "category": "问题分类",
+    "progress": "当前进度",
+    "date": "日期",
+    "sourceMessageId": "",
+    "dedupeKey": ""
+  },
+  "cardTemplate": {
+    "realtimeTemplateId": "AAq_fixture_realtime",
+    "issueBaseUrl": "https://example.com/base/fixture"
+  },
+  "realtimeGroups": {
+    "enabled": true,
+    "mergeWindowMs": 10,
+    "requireEvidence": true,
+    "sources": [],
+    "analyzer": {
+      "mode": "builtin",
+      "commandEnv": "ISSUE_ANALYZER_COMMAND",
+      "timeoutMs": 20000
+    }
+  },
+  "ownerMappings": {
+    "订单": ["测试负责人"],
+    "物流": ["测试负责人"],
+    "售后&权益": ["测试负责人"],
+    "客服": ["测试负责人"],
+    "行业": ["测试负责人"]
+  }
+}
