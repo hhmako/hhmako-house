@@ -1,0 +1,18 @@
+{
+  "fontFamily": "PingFang SC",
+  "weights": {
+    "regular": "Regular",
+    "medium": "Medium",
+    "semibold": "Semibold"
+  },
+  "webFallback": [
+    "Microsoft YaHei",
+    "Noto Sans CJK SC",
+    "Noto Sans SC",
+    "-apple-system",
+    "BlinkMacSystemFont",
+    "Helvetica Neue",
+    "Arial",
+    "sans-serif"
+  ]
+}
